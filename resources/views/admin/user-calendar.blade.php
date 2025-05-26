@@ -11,6 +11,11 @@
             <button onclick="changeView('day')" class="bg-gray-200 px-3 py-1 rounded">Günlük</button>
             <button onclick="changeView('week')" class="bg-gray-200 px-3 py-1 rounded">Haftalık</button>
             <button onclick="changeView('month')" class="bg-gray-200 px-3 py-1 rounded">Aylık</button>
+
+            <a href="{{ route('admin.users.calendar.pdf', $user->id) }}"
+                class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">
+                📄 PDF Al
+            </a>
         </div>
 
 

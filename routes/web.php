@@ -51,6 +51,9 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
 
     Route::get('/admin/events/{userId}', [EventController::class, 'listForUser'])
         ->name('admin.events.user');
+
+    Route::get('/admin/users/{user}/calendar/pdf', [EventController::class, 'exportPdf'])
+        ->name('admin.users.calendar.pdf');
 });
 
 require __DIR__ . '/auth.php';

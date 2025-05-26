@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
 
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
+
 class EventController extends Controller
 {
     public function index()
@@ -128,5 +131,29 @@ class EventController extends Controller
                 ],
             ];
         }));
+    }
+
+    public function exportPdf(User $user)
+    {
+        if (Auth::user()->role !== 'admin') {
+            abort(403);
+        }
+
+        $now = Carbon::now();
+        $startOfMonth = $now->copy()->startOfMonth();
+        $endOfMonth = $now->copy()->endOfMonth();
+
+        $events = Event::where('user_id', $user->id)
+            ->whereBetween('start', [$startOfMonth, $endOfMonth])
+            ->orderBy('start')
+            ->get();
+
+        $pdf = Pdf::loadView('admin.calendar-pdf', [
+            'user' => $user,
+            'events' => $events,
+            'month' => $now->format('F Y')
+        ]);
+
+        return $pdf->download("takvim_{$user->name}_{$now->format('Y_m')}.pdf");
     }
 }
